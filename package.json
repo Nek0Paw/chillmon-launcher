@@ -1,6 +1,6 @@
 {
   "name": "chillmon-launcher",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "productName": "Chillmon",
   "description": "Chillmon launcher for the Cobblemon 1.21.1 pack",
   "author": "SeiRayne",
@@ -43,7 +43,8 @@
     "@stylistic/eslint-plugin": "^5.6.1",
     "electron": "^39.8.10",
     "electron-builder": "^26.4.0",
-    "eslint": "^9.39.2"
+    "eslint": "^9.39.2",
+    "rcedit": "^5.0.2"
   },
   "repository": {
     "type": "git",

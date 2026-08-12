@@ -1,8 +1,8 @@
-appId: 'chillmon.launcher'
+﻿appId: 'chillmon.launcher'
 productName: 'Chillmon'
 artifactName: '${productName}-setup-${version}.${ext}'
 
-copyright: 'Copyright © Chillmon'
+copyright: 'Copyright В© Chillmon'
 
 asar: true
 compression: 'normal'
@@ -18,6 +18,8 @@ extraResources:
 # Windows Configuration
 win: 
   icon: build/icon.ico
+  # false: winCodeSign extract needs symlink privilege on this machine.
+  # Icon is applied in build/afterPack.js via @electron/rcedit instead.
   signAndEditExecutable: false
   target: 
     - target: 'nsis'
@@ -57,6 +59,8 @@ linux:
   description: 'Custom launcher which allows users to join modded servers. All mods, configurations, and updates are handled automatically.'
   category: 'Game'
 
+
+afterPack: build/afterPack.js
 
 directories:
   buildResources: 'build'
