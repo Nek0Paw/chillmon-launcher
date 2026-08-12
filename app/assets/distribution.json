@@ -126,11 +126,11 @@
                                 "MD5": "881e0e9f53a11b9ad468b47afd678bfd",
                                 "path": "net/fabricmc/fabric-loader/0.19.3/fabric-loader-0.19.3.jar",
                                 "url": "https://pub-27c396805e334927b5344d81092b6279.r2.dev/libraries/net/fabricmc/fabric-loader/0.19.3/fabric-loader-0.19.3.jar"
-                                                                                }
-                                                               }
-                                                           ]
-                                        },
-                                        {
+                            }
+                        }
+                    ]
+                },
+                {
                     "id": "run.pack:accessories-fabric-1.1.0-beta.53_1.21.1:1.0.0",
                     "name": "accessories-fabric-1.1.0-beta.53+1.21.1.jar",
                     "type": "File",
@@ -3101,17 +3101,6 @@
                     }
                 },
                 {
-                    "id": "run.pack:_1.21.0_-_1.21.3__GUI_Revision_Dark:1.0.0",
-                    "name": "[1.21.0 - 1.21.3] GUI Revision Dark.zip",
-                    "type": "File",
-                    "artifact": {
-                        "size": 4329371,
-                        "MD5": "5fbaf16c9a33cd6e7bed8853f0059ff0",
-                        "path": "resourcepacks/[1.21.0 - 1.21.3] GUI Revision Dark.zip",
-                        "url": "https://pub-27c396805e334927b5344d81092b6279.r2.dev/resourcepacks/[1.21.0 - 1.21.3] GUI Revision Dark.zip"
-                    }
-                },
-                {
                     "id": "run.pack:_Compressed__Alternative_Rain_Sounds_1.21-1.21.1:1.0.0",
                     "name": "[Compressed] Alternative Rain Sounds 1.21-1.21.1.zip",
                     "type": "File",
@@ -3329,9 +3318,9 @@
                         "MD5": "5120913b7afe18d0fc828a692f49799f",
                         "path": "essential/config.toml",
                         "url": "https://pub-27c396805e334927b5344d81092b6279.r2.dev/essential/config.toml"
-                                                         }
-                                        }
-                                    ]
                     }
-                ]
+                }
+            ]
+        }
+    ]
 }
