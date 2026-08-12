@@ -4,3 +4,5 @@
 /target/
 /logs/
 /dist/
+# Needs 'workflow' OAuth scope to push
+.github/workflows/
