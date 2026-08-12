@@ -27,6 +27,23 @@ const VIEWS = {
 let currentView
 
 /**
+ * Rotate Cobblemon menu wallpapers while the launcher is open.
+ * Files: assets/images/backgrounds/0.jpg … N.jpg
+ */
+function startBackgroundRotation(){
+    const count = Math.max(1, parseInt(document.body.getAttribute('bgcount') || '1', 10) || 1)
+    if(count < 2){
+        return
+    }
+    let idx = parseInt(document.body.getAttribute('bkid') || '0', 10) || 0
+    setInterval(() => {
+        idx = (idx + 1) % count
+        document.body.setAttribute('bkid', String(idx))
+        document.body.style.backgroundImage = `url('assets/images/backgrounds/${idx}.jpg')`
+    }, 45000)
+}
+
+/**
  * Switch launcher views.
  * 
  * @param {string} current The ID of the current view container. 
@@ -72,6 +89,7 @@ async function showMainUI(data){
     setTimeout(() => {
         document.getElementById('frameBar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)'
         document.body.style.backgroundImage = `url('assets/images/backgrounds/${document.body.getAttribute('bkid')}.jpg')`
+        startBackgroundRotation()
         $('#main').show()
 
         const isLoggedIn = Object.keys(ConfigManager.getAuthAccounts()).length > 0

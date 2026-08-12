@@ -2,7 +2,7 @@
 productName: 'Chillmon'
 artifactName: '${productName}-setup-${version}.${ext}'
 
-copyright: 'Copyright В© Chillmon'
+copyright: 'Copyright © Chillmon'
 
 asar: true
 compression: 'normal'
@@ -23,8 +23,6 @@ win:
   signAndEditExecutable: false
   target: 
     - target: 'nsis'
-      arch: 'x64'
-    - target: 'portable'
       arch: 'x64'
 
 # Windows Installer Configuration
@@ -61,6 +59,11 @@ linux:
 
 
 afterPack: build/afterPack.js
+
+publish:
+  - provider: github
+    owner: Nek0Paw
+    repo: chillmon-launcher
 
 directories:
   buildResources: 'build'

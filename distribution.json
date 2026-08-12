@@ -1,11 +1,11 @@
 {
     "version": "1.0.0",
-    "rss": "",
+    "rss": "https://pub-27c396805e334927b5344d81092b6279.r2.dev/news.rss",
     "servers": [
         {
             "id": "run-cobblemon",
             "name": "Chillmon",
-            "description": "Chillmon Cobblemon 1.21.1 Fabric pack",
+            "description": "Chillmon Cobblemon 1.21.1 — voice chat included",
             "version": "1.0.0",
             "address": "185.9.145.82:32615",
             "minecraftVersion": "1.21.1",
@@ -3319,8 +3319,29 @@
                         "path": "essential/config.toml",
                         "url": "https://pub-27c396805e334927b5344d81092b6279.r2.dev/essential/config.toml"
                     }
+                },
+                {
+                    "id": "run.pack:options.txt:1.0.0",
+                    "name": "Default client options",
+                    "type": "File",
+                    "artifact": {
+                        "size": 1673,
+                        "path": "options.txt",
+                        "url": "https://pub-27c396805e334927b5344d81092b6279.r2.dev/options.txt"
+                    }
+                },
+                {
+                    "id": "run.pack:iris.properties:1.0.0",
+                    "name": "Iris defaults",
+                    "type": "File",
+                    "artifact": {
+                        "size": 221,
+                        "path": "config/iris.properties",
+                        "url": "https://pub-27c396805e334927b5344d81092b6279.r2.dev/config/iris.properties"
+                    }
                 }
-            ]
+            ],
+            "icon": "https://pub-27c396805e334927b5344d81092b6279.r2.dev/meta/server-icon.png"
         }
     ]
 }

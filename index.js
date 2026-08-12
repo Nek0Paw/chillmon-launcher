@@ -247,8 +247,17 @@ function createWindow() {
     })
     remoteMain.enable(win.webContents)
 
+    // Pick a random Cobblemon menu wallpaper (assets/images/backgrounds/N.jpg).
+    const bgDir = path.join(__dirname, 'app', 'assets', 'images', 'backgrounds')
+    let bgCount = 1
+    try {
+        bgCount = fs.readdirSync(bgDir).filter(f => /^\d+\.jpg$/i.test(f)).length || 1
+    } catch (err) {
+        bgCount = 1
+    }
     const data = {
-        bkid: 0,
+        bkid: Math.floor(Math.random() * bgCount),
+        bgCount,
         lang: (str, placeHolders) => LangLoader.queryEJS(str, placeHolders)
     }
     Object.entries(data).forEach(([key, val]) => ejse.data(key, val))

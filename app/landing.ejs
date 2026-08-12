@@ -123,25 +123,8 @@
         </div>
         <div id="center">
             <div class="bot_wrapper">
-                <div id="content">
-                    <button id="newsButton">
-                        <!--<img src="assets/images/icons/arrow.svg" id="newsButtonSVG"/>-->
-                        <div id="newsButtonAlert" style="display: none;"></div>
-                        <svg id="newsButtonSVG" viewBox="0 0 24.87 13.97">
-                            <defs>
-                                <style>.arrowLine{fill:none;stroke:#FFF;stroke-width:2px;}</style>
-                            </defs>
-                            <polyline class="arrowLine" points="0.71 13.26 12.56 1.41 24.16 13.02"/>
-                        </svg>
-                        &#10;<span id="newsButtonText"><%- lang('landing.newsButton') %></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div id="right">
-            <div class="bot_wrapper">
                 <div id="launch_content">
-                    <button id="launch_button">НАЧАТЬ ИГРУ</button>
+                    <button id="launch_button"><%- lang('landing.launchButton') %></button>
                     <div class="bot_divider"></div>
                     <button id="server_selection_button" class="bot_label"><%- lang('landing.launchButtonPlaceholder') %></button>
                 </div>
@@ -154,6 +137,22 @@
                         <progress id="launch_progress" value="22" max="100"></progress>
                         <span id="launch_details_text" class="bot_label"><%- lang('landing.launchDetails') %></span>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div id="right">
+            <div class="bot_wrapper">
+                <div id="content">
+                    <button id="newsButton">
+                        <div id="newsButtonAlert" style="display: none;"></div>
+                        <svg id="newsButtonSVG" viewBox="0 0 24.87 13.97">
+                            <defs>
+                                <style>.arrowLine{fill:none;stroke:#FFF;stroke-width:2px;}</style>
+                            </defs>
+                            <polyline class="arrowLine" points="0.71 13.26 12.56 1.41 24.16 13.02"/>
+                        </svg>
+                        &#10;<span id="newsButtonText"><%- lang('landing.newsButton') %></span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -218,7 +217,7 @@
     </div>
     <div id="fileCheckOverlay" style="display: none;">
         <div id="fileCheckModal">
-            <div id="fileCheckTitle">Проверка файлов</div>
+            <div id="fileCheckTitle"><%- lang('landing.fileCheckTitle') %></div>
             <div id="fileCheckPack">
                 <img src="assets/images/SealCircle.png" alt="">
                 <span>Chillmon</span>
@@ -227,7 +226,7 @@
                 <span id="fileCheckPercent">0%</span>
                 <div id="fileCheckBarTrack"><div id="fileCheckBarFill"></div></div>
             </div>
-            <div id="fileCheckStatus">Проверяем моды и конфиги…</div>
+            <div id="fileCheckStatus"><%- lang('landing.fileCheckStatus') %></div>
         </div>
     </div>
     <script src="./assets/js/scripts/landing.js"></script>

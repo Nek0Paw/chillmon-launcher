@@ -529,9 +529,11 @@ body, button {
     width: 100%;
     text-align: right;
     position: absolute;
-    top: 7px;
+    /* Sit just above the underline (field has margin-bottom: 20px). */
+    bottom: 22px;
     opacity: 0;
     transition: 0.25s ease;
+    pointer-events: none;
 }
 
 .shake {
@@ -560,7 +562,8 @@ body, button {
 .loginField {
     font-family: 'Avenir Book';
     background: none;
-    border-width: 1.5px 0px 0px 0px;
+    /* Underline under the text (was top border — looked wrong on offline login). */
+    border-width: 0 0 1.5px 0;
     border-style: solid;
     width: 250px;
     margin-bottom: 20px;
@@ -569,7 +572,7 @@ body, button {
     font-weight: bold;
     text-align: center;
     box-sizing: border-box;
-    padding: 7.5px;
+    padding: 7.5px 7.5px 8px;
     font-size: 10px;
     letter-spacing: 1px;
 }
@@ -2508,12 +2511,24 @@ input:checked + .toggleSwitchSlider:before {
     width: 34%;
     display: inline-flex;
     justify-content: center;
+    align-items: flex-start;
 }
 #landingContainer > #lower > #center #content {
     position: relative;
     z-index: 500;
     transition: top 2s ease;
     top: 10px;
+}
+#landingContainer > #lower > #center #launch_content {
+    position: relative;
+    top: 8px;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+}
+#landingContainer > #lower > #center #launch_details {
+    position: relative;
+    top: 8px;
 }
 #landingContainer > #lower > #right {
     position: relative;
@@ -2522,6 +2537,7 @@ input:checked + .toggleSwitchSlider:before {
     height: 100%;
     width: 33%;
     display: inline-flex;
+    justify-content: center;
 }
 
 /*******************************************************************************
@@ -3386,11 +3402,13 @@ input:checked + .toggleSwitchSlider:before {
 * Landing View (Bottom Styles) | Right Content
 * * */
 
-/* Main launch content container. */
-#landingContainer > #lower > #right #launch_content {
+/* Main launch content container (centered hero Play). */
+#landingContainer > #lower > #center #launch_content {
     position: relative;
-    top: 25px;
+    top: 8px;
     display: inline-flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* The launch button. */
@@ -3408,6 +3426,7 @@ input:checked + .toggleSwitchSlider:before {
     transition: 0.25s ease;
     outline: none;
     box-shadow: 0 0 18px rgba(61, 255, 122, 0.25);
+    min-width: 220px;
 }
 #launch_button:hover,
 #launch_button:focus {
@@ -4091,14 +4110,21 @@ input:checked + .toggleSwitchSlider:before {
     height: 16px;
 }
 #launch_button {
-    font-size: 22px;
-    padding: 16px 34px;
+    font-size: 26px;
+    padding: 18px 48px;
     border-width: 3px;
-    border-radius: 12px;
-    letter-spacing: 3px;
+    border-radius: 14px;
+    letter-spacing: 4px;
+    min-width: 260px;
 }
-#landingContainer > #lower > #right #launch_content {
-    top: 18px;
+#landingContainer > #lower > #center #launch_content {
+    top: 4px;
+}
+#landingContainer > #lower > #right #content {
+    position: relative;
+    z-index: 500;
+    transition: top 2s ease;
+    top: 10px;
 }
 #server_selection_button {
     font-size: 15px !important;

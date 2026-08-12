@@ -1,12 +1,12 @@
 {
     "version": "1.0.0",
-    "rss": "",
+    "rss": "https://pub-27c396805e334927b5344d81092b6279.r2.dev/news.rss",
     "servers": [
         {
             "id": "run-cobblemon",
             "name": "Chillmon",
-            "description": "Chillmon Cobblemon 1.21.1 Fabric pack",
-            "version": "1.0.0",
+            "description": "Chillmon Cobblemon 1.21.1 — voice chat included",
+            "version": "1.0.6",
             "address": "185.9.145.82:32615",
             "minecraftVersion": "1.21.1",
             "mainServer": true,
@@ -3200,12 +3200,12 @@
                     }
                 },
                 {
-                    "id": "run.pack:config_fancymenu_assets_chillmon_bg.jpg:1.0.0",
+                    "id": "run.pack:config_fancymenu_assets_chillmon_bg.jpg:1.0.1",
                     "name": "chillmon_bg.jpg",
                     "type": "File",
                     "artifact": {
-                        "size": 2586608,
-                        "MD5": "dbb3811a6332485601b2fb787ba94d4f",
+                        "size": 231718,
+                        "MD5": "da469c6ee5ef5479f623b8adc641334e",
                         "path": "config/fancymenu/assets/chillmon_bg.jpg",
                         "url": "https://pub-27c396805e334927b5344d81092b6279.r2.dev/config/fancymenu/assets/chillmon_bg.jpg"
                     }
@@ -3222,14 +3222,36 @@
                     }
                 },
                 {
-                    "id": "run.pack:config_fancymenu_customization_chillmon_title.txt:1.0.0",
+                    "id": "run.pack:config_fancymenu_customization_chillmon_title.txt:1.0.1",
                     "name": "chillmon_title.txt",
                     "type": "File",
                     "artifact": {
-                        "size": 16212,
-                        "MD5": "0ca98261bb836e198aa4a8a93e98fd5c",
+                        "size": 19117,
+                        "MD5": "afef86cfdd02fca9ba882573cbb8201f",
                         "path": "config/fancymenu/customization/chillmon_title.txt",
                         "url": "https://pub-27c396805e334927b5344d81092b6279.r2.dev/config/fancymenu/customization/chillmon_title.txt"
+                    }
+                },
+                {
+                    "id": "run.pack:config_fancymenu_assets_btn_hover.png:1.0.0",
+                    "name": "btn_hover.png",
+                    "type": "File",
+                    "artifact": {
+                        "size": 276,
+                        "MD5": "52fc306dc1e785abf8a84ec6e810cab1",
+                        "path": "config/fancymenu/assets/btn_hover.png",
+                        "url": "https://pub-27c396805e334927b5344d81092b6279.r2.dev/config/fancymenu/assets/btn_hover.png"
+                    }
+                },
+                {
+                    "id": "run.pack:config_fancymenu_assets_btn_normal.png:1.0.0",
+                    "name": "btn_normal.png",
+                    "type": "File",
+                    "artifact": {
+                        "size": 273,
+                        "MD5": "1545bbb7bb4885974cc084fd1e63177b",
+                        "path": "config/fancymenu/assets/btn_normal.png",
+                        "url": "https://pub-27c396805e334927b5344d81092b6279.r2.dev/config/fancymenu/assets/btn_normal.png"
                     }
                 },
                 {
@@ -3319,8 +3341,29 @@
                         "path": "essential/config.toml",
                         "url": "https://pub-27c396805e334927b5344d81092b6279.r2.dev/essential/config.toml"
                     }
+                },
+                {
+                    "id": "run.pack:options.txt:1.0.0",
+                    "name": "Default client options",
+                    "type": "File",
+                    "artifact": {
+                        "size": 1673,
+                        "path": "options.txt",
+                        "url": "https://pub-27c396805e334927b5344d81092b6279.r2.dev/options.txt"
+                    }
+                },
+                {
+                    "id": "run.pack:iris.properties:1.0.0",
+                    "name": "Iris defaults",
+                    "type": "File",
+                    "artifact": {
+                        "size": 221,
+                        "path": "config/iris.properties",
+                        "url": "https://pub-27c396805e334927b5344d81092b6279.r2.dev/config/iris.properties"
+                    }
                 }
-            ]
+            ],
+            "icon": "https://pub-27c396805e334927b5344d81092b6279.r2.dev/meta/server-icon.png"
         }
     ]
 }

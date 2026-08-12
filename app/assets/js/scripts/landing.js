@@ -717,7 +717,7 @@ function slide_(up){
     const lCLLeft = document.querySelector('#landingContainer > #lower > #left')
     const lCLCenter = document.querySelector('#landingContainer > #lower > #center')
     const lCLRight = document.querySelector('#landingContainer > #lower > #right')
-    const newsBtn = document.querySelector('#landingContainer > #lower > #center #content')
+    const newsBtn = document.querySelector('#landingContainer > #lower > #right #content')
     const landingContainer = document.getElementById('landingContainer')
     const newsContainer = document.querySelector('#landingContainer > #newsContainer')
 
@@ -728,7 +728,9 @@ function slide_(up){
         lCLLeft.style.top = '-200vh'
         lCLCenter.style.top = '-200vh'
         lCLRight.style.top = '-200vh'
-        newsBtn.style.top = '130vh'
+        if(newsBtn){
+            newsBtn.style.top = '130vh'
+        }
         newsContainer.style.top = '0px'
         //date.toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'})
         //landingContainer.style.background = 'rgba(29, 29, 29, 0.55)'
@@ -736,7 +738,9 @@ function slide_(up){
         setTimeout(() => {
             if(newsGlideCount === 1){
                 lCLCenter.style.transition = 'none'
-                newsBtn.style.transition = 'none'
+                if(newsBtn){
+                    newsBtn.style.transition = 'none'
+                }
             }
             newsGlideCount--
         }, 2000)
@@ -746,13 +750,16 @@ function slide_(up){
         }, 2000)
         landingContainer.style.background = null
         lCLCenter.style.transition = null
-        newsBtn.style.transition = null
+        if(newsBtn){
+            newsBtn.style.transition = null
+            newsBtn.style.top = '10px'
+        }
         newsContainer.style.top = '100%'
         lCUpper.style.top = '0px'
         lCLLeft.style.top = '0px'
         lCLCenter.style.top = '0px'
+        // Keep #right parked so the news button (child) can stay above the panel.
         lCLRight.style.top = '0px'
-        newsBtn.style.top = '10px'
     }
 }
 
@@ -764,7 +771,7 @@ document.getElementById('newsButton').onclick = () => {
         $('#newsContainer *').attr('tabindex', '-1')
     } else {
         $('#landingContainer *').attr('tabindex', '-1')
-        $('#newsContainer, #newsContainer *, #lower, #lower #center *').removeAttr('tabindex')
+        $('#newsContainer, #newsContainer *, #lower, #lower #center *, #lower #right *').removeAttr('tabindex')
         if(newsAlertShown){
             $('#newsButtonAlert').fadeOut(2000)
             newsAlertShown = false
@@ -1017,63 +1024,55 @@ async function loadNews(){
         return null
     }
 
-    const promise = new Promise((resolve, reject) => {
-        
-        const newsFeed = distroData.rawDistribution.rss
-        const newsHost = new URL(newsFeed).origin + '/'
-        $.ajax({
-            url: newsFeed,
-            success: (data) => {
-                const items = $(data).find('item')
-                const articles = []
+    const newsFeed = distroData.rawDistribution.rss
+    const newsHost = new URL(newsFeed).origin + '/'
 
-                for(let i=0; i<items.length; i++){
-                // JQuery Element
-                    const el = $(items[i])
+    try {
+        // Use Node HTTPS (got) instead of jQuery ajax — R2 public URLs have no CORS headers,
+        // so renderer XHR/fetch fails even when the feed is reachable.
+        const got = require('got')
+        const xml = await got(newsFeed, {
+            timeout: { request: 10000 },
+            responseType: 'text',
+            headers: { 'User-Agent': 'Chillmon-Launcher' }
+        }).text()
 
-                    // Resolve date.
-                    const date = new Date(el.find('pubDate').text()).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'})
+        const items = $($.parseXML(xml)).find('item')
+        const articles = []
 
-                    // Resolve comments.
-                    let comments = el.find('slash\\:comments').text() || '0'
-                    comments = comments + ' Comment' + (comments === '1' ? '' : 's')
+        for(let i=0; i<items.length; i++){
+            const el = $(items[i])
 
-                    // Fix relative links in content.
-                    let content = el.find('content\\:encoded').text()
-                    let regex = /src="(?!http:\/\/|https:\/\/)(.+?)"/g
-                    let matches
-                    while((matches = regex.exec(content))){
-                        content = content.replace(`"${matches[1]}"`, `"${newsHost + matches[1]}"`)
-                    }
+            const date = new Date(el.find('pubDate').text()).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'})
 
-                    let link   = el.find('link').text()
-                    let title  = el.find('title').text()
-                    let author = el.find('dc\\:creator').text()
+            let comments = el.find('slash\\:comments').text() || '0'
+            comments = comments + ' Comment' + (comments === '1' ? '' : 's')
 
-                    // Generate article.
-                    articles.push(
-                        {
-                            link,
-                            title,
-                            date,
-                            author,
-                            content,
-                            comments,
-                            commentsLink: link + '#comments'
-                        }
-                    )
-                }
-                resolve({
-                    articles
-                })
-            },
-            timeout: 2500
-        }).catch(err => {
-            resolve({
-                articles: null
+            let content = el.find('content\\:encoded').text()
+            let regex = /src="(?!http:\/\/|https:\/\/)(.+?)"/g
+            let matches
+            while((matches = regex.exec(content))){
+                content = content.replace(`"${matches[1]}"`, `"${newsHost + matches[1]}"`)
+            }
+
+            let link   = el.find('link').text()
+            let title  = el.find('title').text()
+            let author = el.find('dc\\:creator').text()
+
+            articles.push({
+                link,
+                title,
+                date,
+                author,
+                content,
+                comments,
+                commentsLink: link + '#comments'
             })
-        })
-    })
+        }
 
-    return await promise
+        return { articles }
+    } catch (err) {
+        loggerLanding.error('Failed to load news RSS:', err)
+        return { articles: null }
+    }
 }

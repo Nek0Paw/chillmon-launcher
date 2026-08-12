@@ -39,22 +39,32 @@ function resolveBundledDistro() {
     return found
 }
 
-exports.ensureLocalDistro = function () {
+/**
+ * Seed local distro files from the bundled copy.
+ * @param {boolean} force When false, skip if local files already exist.
+ */
+exports.ensureLocalDistro = function (force = false) {
     const src = resolveBundledDistro()
     if (!src) {
         return false
     }
     const dir = ConfigManager.getLauncherDirectory()
     fs.ensureDirSync(dir)
+    const dest = path.join(dir, 'distribution.json')
+    const destDev = path.join(dir, 'distribution_dev.json')
+    if (!force && fs.existsSync(dest) && fs.existsSync(destDev)) {
+        logBoot('keep existing local distro', dir)
+        return true
+    }
     const raw = fs.readFileSync(src, 'utf8').replace(/^\uFEFF/, '')
     JSON.parse(raw)
-    fs.writeFileSync(path.join(dir, 'distribution.json'), raw)
-    fs.writeFileSync(path.join(dir, 'distribution_dev.json'), raw)
+    fs.writeFileSync(dest, raw)
+    fs.writeFileSync(destDev, raw)
     logBoot('wrote local distro', dir)
     return true
 }
 
-function createApi() {
+function createApi(devMode = false) {
     try {
         ConfigManager.load()
     } catch {
@@ -65,7 +75,7 @@ function createApi() {
         ConfigManager.getCommonDirectory(),
         ConfigManager.getInstanceDirectory(),
         exports.REMOTE_DISTRO_URL,
-        true
+        devMode
     )
     holder.api = api
     return api
@@ -73,7 +83,7 @@ function createApi() {
 
 exports.initDistroPaths = function () {
     if (!holder.api) {
-        createApi()
+        createApi(false)
         return
     }
     holder.api.commonDir = ConfigManager.getCommonDirectory()
@@ -82,43 +92,59 @@ exports.initDistroPaths = function () {
 
 exports.loadLocalDistribution = async function () {
     ConfigManager.load()
-    if (!exports.ensureLocalDistro()) {
+    // Seed only when missing — do not overwrite a fresher R2/cache copy every boot.
+    if (!exports.ensureLocalDistro(false)) {
         throw new Error('Bundled distribution.json not found')
     }
-    const api = createApi()
-    api.toggleDevMode(true)
+    const api = createApi(false)
     try {
         const distro = await api.getDistribution()
-        logBoot('DistroAPI.getDistribution ok')
+        logBoot('DistroAPI.getDistribution ok (remote)')
+        // Keep distribution_dev.json in sync for any tooling that reads it.
+        try {
+            const raw = JSON.stringify(api.rawDistribution)
+            fs.writeFileSync(path.join(ConfigManager.getLauncherDirectory(), 'distribution_dev.json'), raw)
+        } catch {
+            // ignore
+        }
         return distro
     } catch (err) {
         logBoot('DistroAPI.getDistribution failed', String(err && err.message || err))
-        const dest = path.join(ConfigManager.getLauncherDirectory(), 'distribution_dev.json')
-        const raw = fs.readFileSync(dest, 'utf8').replace(/^\uFEFF/, '')
-        const json = JSON.parse(raw)
-        const distro = new HeliosDistribution(
-            json,
-            ConfigManager.getCommonDirectory(),
-            ConfigManager.getInstanceDirectory()
-        )
-        api.rawDistribution = json
-        api.distribution = distro
-        logBoot('manual HeliosDistribution ok')
-        return distro
+        exports.ensureLocalDistro(true)
+        api.toggleDevMode(true)
+        try {
+            const distro = await api.getDistribution()
+            logBoot('DistroAPI.getDistribution ok (local fallback)')
+            return distro
+        } catch (err2) {
+            logBoot('local fallback failed', String(err2 && err2.message || err2))
+            const dest = path.join(ConfigManager.getLauncherDirectory(), 'distribution_dev.json')
+            const raw = fs.readFileSync(dest, 'utf8').replace(/^\uFEFF/, '')
+            const json = JSON.parse(raw)
+            const distro = new HeliosDistribution(
+                json,
+                ConfigManager.getCommonDirectory(),
+                ConfigManager.getInstanceDirectory()
+            )
+            api.rawDistribution = json
+            api.distribution = distro
+            logBoot('manual HeliosDistribution ok')
+            return distro
+        }
     }
 }
 
 exports.DistroAPI = new Proxy({}, {
     get(_t, prop) {
         if (!holder.api) {
-            createApi()
+            createApi(false)
         }
         const value = holder.api[prop]
         return typeof value === 'function' ? value.bind(holder.api) : value
     },
     set(_t, prop, value) {
         if (!holder.api) {
-            createApi()
+            createApi(false)
         }
         holder.api[prop] = value
         return true
