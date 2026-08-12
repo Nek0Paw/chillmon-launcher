@@ -1,0 +1,20 @@
+# Custom Language File for Launcher Customizer
+
+[ejs.app]
+title = "Chillmon"
+
+[ejs.landing]
+mediaGitHubURL = "https://github.com/dscalzi/HeliosLauncher"
+mediaXURL = "#"
+mediaInstagramURL = "#"
+mediaYouTubeURL = "#"
+mediaDiscordURL = "https://discord.gg/zNWUXdt"
+
+[ejs.settings]
+sourceGithubLink = "https://github.com/dscalZi/HeliosLauncher"
+supportLink = "https://github.com/dscalZi/HeliosLauncher/issues"
+
+[ejs.welcome]
+welcomeHeader = "WELCOME TO CHILLMON"
+welcomeDescription = "Chillmon launches the Cobblemon pack and keeps mods updated."
+welcomeDescCTA = "Sign in with Microsoft to play."
