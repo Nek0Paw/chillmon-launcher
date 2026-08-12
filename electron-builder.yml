@@ -17,11 +17,12 @@ extraResources:
 
 # Windows Configuration
 win: 
+  icon: build/icon.ico
   signAndEditExecutable: false
   target: 
-    - target: 'portable'
-      arch: 'x64'
     - target: 'nsis'
+      arch: 'x64'
+    - target: 'portable'
       arch: 'x64'
 
 # Windows Installer Configuration
@@ -30,6 +31,12 @@ nsis:
   perMachine: false
   allowElevation: true
   allowToChangeInstallationDirectory: true
+  installerIcon: build/icon.ico
+  uninstallerIcon: build/icon.ico
+  installerHeaderIcon: build/icon.ico
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Chillmon
 
 # macOS Configuration
 mac:
