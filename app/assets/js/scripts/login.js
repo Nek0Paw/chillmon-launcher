@@ -4,7 +4,6 @@
 // Validation Regexes.
 const validUsername         = /^[a-zA-Z0-9_]{1,16}$/
 const basicEmail            = /^\S+@\S+\.\S+$/
-//const validEmail          = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 
 // Login Elements
 const loginCancelContainer  = document.getElementById('loginCancelContainer')
@@ -17,10 +16,41 @@ const checkmarkContainer    = document.getElementById('checkmarkContainer')
 const loginRememberOption   = document.getElementById('loginRememberOption')
 const loginButton           = document.getElementById('loginButton')
 const loginForm             = document.getElementById('loginForm')
+const loginPasswordContainer = loginPassword.closest('.loginFieldContainer')
+const loginOptionsRow       = document.getElementById('loginOptions')
+const loginSubheader        = document.getElementById('loginSubheader')
+const loginDisclaimer       = document.getElementById('loginDisclaimer')
 
 // Control variables.
 let lu = false, lp = false
+let loginOfflineMode = false
 
+/**
+ * Toggle offline (nickname-only) login UI.
+ * @param {boolean} enabled
+ */
+function setLoginOfflineMode(enabled){
+    loginOfflineMode = !!enabled
+    if(loginOfflineMode){
+        loginPasswordContainer.style.display = 'none'
+        loginOptionsRow.style.display = 'none'
+        loginDisclaimer.style.display = 'none'
+        loginSubheader.textContent = Lang.queryJS('login.offlineSubheader')
+        loginUsername.placeholder = Lang.queryJS('login.offlineNicknamePlaceholder')
+        loginPassword.value = ''
+        lp = true
+        validateOfflineUsername(loginUsername.value)
+    } else {
+        loginPasswordContainer.style.display = ''
+        loginOptionsRow.style.display = ''
+        loginDisclaimer.style.display = ''
+        loginSubheader.textContent = Lang.queryJS('login.loginSubheader')
+        loginUsername.placeholder = Lang.queryJS('login.loginEmailPlaceholder')
+        lp = false
+        validateEmail(loginUsername.value)
+        validatePassword(loginPassword.value)
+    }
+}
 
 /**
  * Show a login error.
@@ -47,11 +77,37 @@ function shakeError(element){
 }
 
 /**
+ * Validate offline nickname.
+ * @param {string} value
+ */
+function validateOfflineUsername(value){
+    if(value){
+        if(!validUsername.test(value)){
+            showError(loginEmailError, Lang.queryJS('login.error.invalidValue'))
+            loginDisabled(true)
+            lu = false
+        } else {
+            loginEmailError.style.opacity = 0
+            lu = true
+            loginDisabled(false)
+        }
+    } else {
+        lu = false
+        showError(loginEmailError, Lang.queryJS('login.error.requiredValue'))
+        loginDisabled(true)
+    }
+}
+
+/**
  * Validate that an email field is neither empty nor invalid.
  * 
  * @param {string} value The email value.
  */
 function validateEmail(value){
+    if(loginOfflineMode){
+        validateOfflineUsername(value)
+        return
+    }
     if(value){
         if(!basicEmail.test(value) && !validUsername.test(value)){
             showError(loginEmailError, Lang.queryJS('login.error.invalidValue'))
@@ -77,6 +133,9 @@ function validateEmail(value){
  * @param {string} value The password value.
  */
 function validatePassword(value){
+    if(loginOfflineMode){
+        return
+    }
     if(value){
         loginPasswordError.style.opacity = 0
         lp = true
@@ -169,6 +228,7 @@ loginCancelButton.onclick = (e) => {
         loginUsername.value = ''
         loginPassword.value = ''
         loginCancelEnabled(false)
+        setLoginOfflineMode(false)
         if(loginViewCancelHandler != null){
             loginViewCancelHandler()
             loginViewCancelHandler = null
@@ -187,7 +247,11 @@ loginButton.addEventListener('click', () => {
     // Show loading stuff.
     loginLoading(true)
 
-    AuthManager.addMojangAccount(loginUsername.value, loginPassword.value).then((value) => {
+    const loginPromise = loginOfflineMode
+        ? AuthManager.addOfflineAccount(loginUsername.value)
+        : AuthManager.addMojangAccount(loginUsername.value, loginPassword.value)
+
+    loginPromise.then((value) => {
         updateSelectedAccount(value)
         loginButton.innerHTML = loginButton.innerHTML.replace(Lang.queryJS('login.loggingIn'), Lang.queryJS('login.success'))
         $('.circle-loader').toggleClass('load-complete')
@@ -203,6 +267,7 @@ loginButton.addEventListener('click', () => {
                 loginViewCancelHandler = null // Reset this for good measure.
                 loginUsername.value = ''
                 loginPassword.value = ''
+                setLoginOfflineMode(false)
                 $('.circle-loader').toggleClass('load-complete')
                 $('.checkmark').toggle()
                 loginLoading(false)

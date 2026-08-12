@@ -348,6 +348,7 @@ document.getElementById('settingsAddMojangAccount').onclick = (e) => {
         loginViewOnCancel = VIEWS.settings
         loginViewOnSuccess = VIEWS.settings
         loginCancelEnabled(true)
+        setLoginOfflineMode(true)
     })
 }
 

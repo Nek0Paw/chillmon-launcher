@@ -9,6 +9,7 @@
  * @module authmanager
  */
 // Requirements
+const crypto                 = require('crypto')
 const ConfigManager          = require('./configmanager')
 const { LoggerUtil }         = require('helios-core')
 const { RestResponseStatus } = require('helios-core/common')
@@ -18,6 +19,25 @@ const { AZURE_CLIENT_ID }    = require('./ipcconstants')
 const Lang = require('./langloader')
 
 const log = LoggerUtil.getLogger('AuthManager')
+
+/**
+ * Java-compatible offline UUID: UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(UTF_8))
+ * @param {string} username
+ * @returns {string}
+ */
+function offlinePlayerUuid(username) {
+    const hash = crypto.createHash('md5').update('OfflinePlayer:' + username, 'utf8').digest()
+    hash[6] = (hash[6] & 0x0f) | 0x30
+    hash[8] = (hash[8] & 0x3f) | 0x80
+    const hex = hash.toString('hex')
+    return [
+        hex.slice(0, 8),
+        hex.slice(8, 12),
+        hex.slice(12, 16),
+        hex.slice(16, 20),
+        hex.slice(20)
+    ].join('-')
+}
 
 // Error messages
 
@@ -167,6 +187,27 @@ exports.addMojangAccount = async function(username, password) {
     }
 }
 
+/**
+ * Add an offline account (nickname only). Used for cracked/pirate clients
+ * joining offline-mode servers (e.g. EasyAuth).
+ *
+ * @param {string} username In-game nickname (1-16: letters, digits, underscore).
+ * @returns {Promise.<Object>} Promise which resolves the stored account object.
+ */
+exports.addOfflineAccount = async function(username) {
+    const name = (username || '').trim()
+    if(!/^[a-zA-Z0-9_]{1,16}$/.test(name)) {
+        return Promise.reject({
+            title: Lang.queryJS('auth.offline.error.invalidNameTitle'),
+            desc: Lang.queryJS('auth.offline.error.invalidNameDesc')
+        })
+    }
+    const uuid = offlinePlayerUuid(name)
+    const ret = ConfigManager.addOfflineAuthAccount(uuid, name)
+    ConfigManager.save()
+    return ret
+}
+
 const AUTH_MODE = { FULL: 0, MS_REFRESH: 1, MC_REFRESH: 2 }
 
 /**
@@ -276,6 +317,11 @@ exports.addMicrosoftAccount = async function(authCode) {
 exports.removeMojangAccount = async function(uuid){
     try {
         const authAcc = ConfigManager.getAuthAccount(uuid)
+        if(authAcc?.type === 'offline') {
+            ConfigManager.removeAuthAccount(uuid)
+            ConfigManager.save()
+            return Promise.resolve()
+        }
         const response = await MojangRestAPI.invalidate(authAcc.accessToken, ConfigManager.getClientToken())
         if(response.responseStatus === RestResponseStatus.SUCCESS) {
             ConfigManager.removeAuthAccount(uuid)
@@ -418,6 +464,8 @@ exports.validateSelected = async function(){
 
     if(current.type === 'microsoft') {
         return await validateSelectedMicrosoftAccount()
+    } else if(current.type === 'offline') {
+        return true
     } else {
         return await validateSelectedMojangAccount()
     }

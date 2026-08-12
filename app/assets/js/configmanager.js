@@ -350,6 +350,26 @@ exports.addMojangAuthAccount = function(uuid, accessToken, username, displayName
 }
 
 /**
+ * Adds an offline (cracked/pirate) account. Nickname only, no Mojang/Microsoft auth.
+ *
+ * @param {string} uuid Offline UUID for the nickname.
+ * @param {string} displayName In-game nickname.
+ * @returns {Object} The authenticated account object created by this action.
+ */
+exports.addOfflineAuthAccount = function(uuid, displayName){
+    const name = displayName.trim()
+    config.selectedAccount = uuid
+    config.authenticationDatabase[uuid] = {
+        type: 'offline',
+        accessToken: '0',
+        username: name,
+        uuid: uuid.trim(),
+        displayName: name
+    }
+    return config.authenticationDatabase[uuid]
+}
+
+/**
  * Update the tokens of an authenticated microsoft account.
  * 
  * @param {string} uuid The uuid of the authenticated account.
