@@ -4,7 +4,7 @@ const { DistributionAPI, HeliosDistribution } = require('helios-core/common')
 
 const ConfigManager = require('./configmanager')
 
-exports.REMOTE_DISTRO_URL = process.env.RUN_DISTRO_URL || 'http://127.0.0.1:8765/distribution.json'
+exports.REMOTE_DISTRO_URL = process.env.RUN_DISTRO_URL || 'https://pub-27c396805e334927b5344d81092b6279.r2.dev/distribution.json'
 
 const holder = { api: null }
 
